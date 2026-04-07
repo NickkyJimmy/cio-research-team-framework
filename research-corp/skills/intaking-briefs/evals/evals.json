@@ -1,0 +1,29 @@
+{
+  "skill_name": "intaking-briefs",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I need research help for our checkout redesign. Since launching one-click checkout last month, completion went from 41% to 46% but repeat purchase stayed flat at 18%. Leadership wants to know what to improve before our May campaign. We mostly care about Gen Z users in HCMC and Hanoi.",
+      "expected_output": "Structured brief with complete business performance, enhanced measurable objective, target audience definition, timeframe feasibility, and classification.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "Can you make a brief from this: research everything about user behavior across all products. Need by next Friday. No metrics yet.",
+      "expected_output": "Agent should narrow overscoped objective, ask focused clarification questions, and avoid fabricating missing metrics.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I pasted a draft brief below. Please clean it and only ask what is missing. Context: We launched referral rewards for wallet users. KPI target is +12% referral conversion in Q3. Objective: understand if messaging is clear. Segment: first-time senders and inactive senders. Deadline: Apr 18, report needed before creative lock on Apr 22.",
+      "expected_output": "Agent extracts existing fields without re-asking, enhances objective, and returns ready status if complete.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Use the info below and do not ask duplicate questions. We launched installment payments in January. MAU grew from 220k to 248k, but successful payment completion is still 63%. Goal is reach 70% by end of Q3. Primary segment is new credit users in HCMC. Deadline is May 20 before sprint planning.",
+      "expected_output": "Agent should avoid re-asking provided facts, produce a decision-linked enhanced objective, and return ready if no required gaps remain.",
+      "files": []
+    }
+  ]
+}

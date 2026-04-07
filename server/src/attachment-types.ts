@@ -27,6 +27,7 @@ export const DEFAULT_ALLOWED_TYPES: readonly string[] = [
   "application/json",
   "text/csv",
   "text/html",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
 
 /**

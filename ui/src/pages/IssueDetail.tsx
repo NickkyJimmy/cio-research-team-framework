@@ -106,6 +106,10 @@ const ACTION_LABELS: Record<string, string> = {
   "approval.created": "requested approval",
   "approval.approved": "approved",
   "approval.rejected": "rejected",
+  "approval.revision_requested": "requested revisions",
+  "approval.resubmitted": "resubmitted approval",
+  "approval.requester_wakeup_queued": "queued requester wakeup",
+  "approval.requester_wakeup_failed": "failed to queue requester wakeup",
 };
 
 const FEEDBACK_TERMS_URL = import.meta.env.VITE_FEEDBACK_TERMS_URL?.trim() || "https://paperclip.ing/tos";
@@ -1107,7 +1111,7 @@ export function IssueDetail() {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,application/pdf,text/plain,text/markdown,application/json,text/csv,text/html,.md,.markdown"
+        accept="image/*,application/pdf,text/plain,text/markdown,application/json,text/csv,text/html,.md,.markdown,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         className="hidden"
         onChange={handleFilePicked}
         multiple

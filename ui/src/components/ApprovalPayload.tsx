@@ -5,6 +5,7 @@ export const typeLabel: Record<string, string> = {
   hire_agent: "Hire Agent",
   approve_ceo_strategy: "CEO Strategy",
   budget_override_required: "Budget Override",
+  research_gate_a_brief: "Research Gate A: Brief",
 };
 
 /** Build a contextual label for an approval, e.g. "Hire Agent: Designer" */
@@ -20,6 +21,7 @@ export const typeIcon: Record<string, typeof UserPlus> = {
   hire_agent: UserPlus,
   approve_ceo_strategy: Lightbulb,
   budget_override_required: ShieldAlert,
+  research_gate_a_brief: Lightbulb,
 };
 
 export const defaultTypeIcon = ShieldCheck;

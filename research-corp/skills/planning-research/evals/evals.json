@@ -1,0 +1,41 @@
+{
+  "skill_name": "planning-research",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Create a research plan from this brief: objective is to measure campaign awareness and message clarity for a new savings product among salaried urban users, with a decision deadline in 4 weeks. Include method choice rationale and quota logic.",
+      "expected_output": "Execution-ready plan with explicit methodology rationale, quant-oriented sample plan, objective-content mapping, and realistic timeline.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "We need to understand why churn increased in our food delivery app after subscription changes. We also need incidence estimates by segment. Deadline is 2.5 weeks. Build a plan.",
+      "expected_output": "Mixed-method or constrained approach with clear trade-offs, traceable content blocks, and explicit deadline risk handling.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Draft a plan where stakeholders insist on FGD, but the core objective is to estimate conversion lift by audience segment. Please handle disagreement respectfully.",
+      "expected_output": "Plan should explain method mismatch, document limitations, and propose a decision-suitable alternative.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Our VP says the objective is 'understand users better' for our bill-payment feature. North-star metric is monthly bill-payment retention, target +8% by Q4. Please turn this into a proper objective-led research plan we can execute.",
+      "expected_output": "Plan should rewrite vague objective into measurable decision-linked objective with clear sub-objectives and method fit.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Need a plan for onboarding research across 3 segments: new users, reactivated users, and heavy users. Deadline is 12 days and budget is tight. We still need confidence for launch messaging decisions.",
+      "expected_output": "Plan should show quota prioritization, feasibility trade-offs, and explicit decision risk if confidence is reduced.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Build a plan for retention decline diagnosis where stakeholder insists on FGD-only, but decision requires segment-level incidence estimates in 3 weeks. Explain trade-offs and keep recommendation coherent.",
+      "expected_output": "Plan should respectfully address method mismatch, recommend decision-fit design, and provide one coherent path with explicit confidence and timeline trade-offs.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+schema: paperclip/v1
+agents:
+  ceo:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+  research-leader:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+      - leading-research
+  brief-and-plan:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+      - intaking-briefs
+      - planning-research
+  questionnaire-agent:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+      - designing-questionnaires
+  data-processing:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+  report-agent:
+    adapter:
+      type: codex_local
+    skills:
+      - paperclip
+      - para-memory-files
+      - reporting-research
