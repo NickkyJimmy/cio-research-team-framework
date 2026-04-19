@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 import { execFile as execFileCallback } from "node:child_process";
 import { promisify } from "node:util";
 import { and, asc, desc, eq, gt, inArray, sql } from "drizzle-orm";
@@ -10,6 +11,7 @@ import {
   agentRuntimeState,
   agentTaskSessions,
   agentWakeupRequests,
+  companySkills,
   heartbeatRunEvents,
   heartbeatRuns,
   issueComments,
@@ -62,6 +64,22 @@ import {
   resolveSessionCompactionPolicy,
   type SessionCompactionPolicy,
 } from "@paperclipai/adapter-utils";
+import { hydrateMemoryForRun, captureRunSummary } from "./mem0-memory.js";
+
+export interface SkillOverrideOptions {
+  mode: 'replace' | 'exclude';
+  skillId: string;
+  snapshot?: SkillSnapshot;
+}
+
+export interface SkillSnapshot {
+  name: string;
+  description: string;
+  skillMd: string;
+  scripts: Array<{ path: string; content: string }>;
+  references: Array<{ path: string; content: string }>;
+  assets: Array<{ path: string; contentHash: string; url?: string }>;
+}
 
 const MAX_LIVE_LOG_CHUNK_BYTES = 8 * 1024;
 const HEARTBEAT_MAX_CONCURRENT_RUNS_DEFAULT = 1;
@@ -302,6 +320,7 @@ interface WakeupOptions {
   requestedByActorType?: "user" | "agent" | "system";
   requestedByActorId?: string | null;
   contextSnapshot?: Record<string, unknown>;
+  skillOverride?: SkillOverrideOptions;
 }
 
 type UsageTotals = {
@@ -1065,6 +1084,68 @@ function resolveNextSessionState(input: {
   };
 }
 
+export async function assembleSkillContext(
+  runtimeSkills: any[],
+  override: SkillOverrideOptions | undefined
+) {
+  if (!override) return runtimeSkills;
+
+  if (override.mode === "exclude") {
+    return runtimeSkills.filter(s => s.key !== override.skillId);
+  }
+
+  if (override.mode === "replace" && override.snapshot) {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-skill-eval-"));
+    await fs.writeFile(path.join(tmpDir, "SKILL.md"), override.snapshot.skillMd, "utf8");
+    
+    if (override.snapshot.scripts) {
+      for (const script of override.snapshot.scripts) {
+        const scriptPath = path.join(tmpDir, script.path);
+        await fs.mkdir(path.dirname(scriptPath), { recursive: true });
+        await fs.writeFile(scriptPath, script.content, "utf8");
+      }
+    }
+    
+    if (override.snapshot.references) {
+      for (const ref of override.snapshot.references) {
+        const refPath = path.join(tmpDir, ref.path);
+        await fs.mkdir(path.dirname(refPath), { recursive: true });
+        await fs.writeFile(refPath, ref.content, "utf8");
+      }
+    }
+
+    return runtimeSkills.map(s => {
+      if (s.key === override.skillId) {
+        return {
+          ...s,
+          source: tmpDir,
+        };
+      }
+      return s;
+    });
+  }
+
+  return runtimeSkills;
+}
+
+async function resolveRuntimeSkillOverride(
+  db: Db,
+  companyId: string,
+  override: SkillOverrideOptions | undefined,
+): Promise<SkillOverrideOptions | undefined> {
+  if (!override) return undefined;
+  const [skill] = await db
+    .select({ key: companySkills.key })
+    .from(companySkills)
+    .where(and(eq(companySkills.companyId, companyId), eq(companySkills.id, override.skillId)))
+    .limit(1);
+  if (!skill?.key) return override;
+  return {
+    ...override,
+    skillId: skill.key,
+  };
+}
+
 export function heartbeatService(db: Db) {
   const instanceSettings = instanceSettingsService(db);
   const getCurrentUserRedactionOptions = async () => ({
@@ -1073,7 +1154,7 @@ export function heartbeatService(db: Db) {
 
   const runLogStore = getRunLogStore();
   const secretsSvc = secretService(db);
-  const companySkills = companySkillService(db);
+  const companySkillsSvc = companySkillService(db);
   const issuesSvc = issueService(db);
   const executionWorkspacesSvc = executionWorkspaceService(db);
   const workspaceOperationsSvc = workspaceOperationService(db);
@@ -2420,7 +2501,36 @@ export function heartbeatService(db: Db) {
       agent.companyId,
       executionRunConfig,
     );
-    const runtimeSkillEntries = await companySkills.listRuntimeSkillEntries(agent.companyId);
+    const rawRuntimeSkillEntries = await companySkillsSvc.listRuntimeSkillEntries(agent.companyId);
+    const parsedContextSnapshot = parseObject(run.contextSnapshot);
+    const resolvedSkillOverride = await resolveRuntimeSkillOverride(
+      db,
+      agent.companyId,
+      parsedContextSnapshot.skillOverride as SkillOverrideOptions | undefined,
+    );
+    const runtimeSkillEntries = await assembleSkillContext(
+      rawRuntimeSkillEntries,
+      resolvedSkillOverride,
+    );
+    // -- Mem0 memory hydration (non-fatal) --
+    let paperclipMemoryBlock: string | null = null;
+    try {
+      paperclipMemoryBlock = await hydrateMemoryForRun(db, {
+        companyId: agent.companyId,
+        agentId: agent.id,
+        issueTitle: issueRef?.title ?? null,
+        wakeReason: readNonEmptyString(context.wakeReason),
+      });
+    } catch (err) {
+      logger.warn(
+        { error: err instanceof Error ? err.message : String(err), agentId: agent.id },
+        "mem0: memory hydration failed (non-fatal)",
+      );
+    }
+    if (paperclipMemoryBlock) {
+      context.paperclipMemory = paperclipMemoryBlock;
+    }
+
     const runtimeConfig = {
       ...resolvedConfig,
       paperclipRuntimeSkills: runtimeSkillEntries,
@@ -3059,6 +3169,21 @@ export function heartbeatService(db: Db) {
             );
           }
         }
+        // -- Mem0 auto-capture (non-fatal) --
+        if (outcome === "succeeded" && adapterResult.summary) {
+          captureRunSummary(db, {
+            companyId: agent.companyId,
+            agentId: agent.id,
+            runId: run.id,
+            summary: adapterResult.summary,
+            issueTitle: issueRef?.title ?? null,
+          }).catch((err) => {
+            logger.warn(
+              { error: err instanceof Error ? err.message : String(err), runId: run.id },
+              "mem0: auto-capture failed (non-fatal)",
+            );
+          });
+        }
         await releaseIssueExecutionAndPromote(finalizedRun);
       }
 
@@ -3346,6 +3471,9 @@ export function heartbeatService(db: Db) {
     const source = opts.source ?? "on_demand";
     const triggerDetail = opts.triggerDetail ?? null;
     const contextSnapshot: Record<string, unknown> = { ...(opts.contextSnapshot ?? {}) };
+    if (opts.skillOverride) {
+      contextSnapshot.skillOverride = opts.skillOverride;
+    }
     const reason = opts.reason ?? null;
     const payload = opts.payload ?? null;
     const {
@@ -4158,6 +4286,7 @@ export function heartbeatService(db: Db) {
       contextSnapshot: Record<string, unknown> = {},
       triggerDetail: "manual" | "ping" | "callback" | "system" = "manual",
       actor?: { actorType?: "user" | "agent" | "system"; actorId?: string | null },
+      skillOverride?: SkillOverrideOptions,
     ) =>
       enqueueWakeup(agentId, {
         source,
@@ -4165,6 +4294,7 @@ export function heartbeatService(db: Db) {
         contextSnapshot,
         requestedByActorType: actor?.actorType,
         requestedByActorId: actor?.actorId ?? null,
+        skillOverride,
       }),
 
     wakeup: enqueueWakeup,

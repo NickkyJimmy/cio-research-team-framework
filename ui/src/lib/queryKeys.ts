@@ -147,4 +147,17 @@ export const queryKeys = {
   adapters: {
     all: ["adapters"] as const,
   },
+  skillEvals: {
+    suites: (companyId: string) => ["skill-evals", "suites", companyId] as const,
+    suite: (companyId: string, suiteId: string) => ["skill-evals", "suites", companyId, suiteId] as const,
+    suiteSummary: (companyId: string, suiteId: string) => ["skill-evals", "suites", companyId, suiteId, "summary"] as const,
+    cases: (companyId: string, suiteId: string) => ["skill-evals", "cases", companyId, suiteId] as const,
+    graders: (companyId: string) => ["skill-evals", "graders", companyId] as const,
+    metrics: (companyId: string) => ["skill-evals", "metrics", companyId] as const,
+    benchmarks: (companyId: string) => ["skill-evals", "benchmarks", companyId] as const,
+    benchmark: (companyId: string, benchmarkId: string) => ["skill-evals", "benchmarks", companyId, benchmarkId] as const,
+    trials: (companyId: string, benchmarkId: string) => ["skill-evals", "trials", companyId, benchmarkId] as const,
+    comparisons: (companyId: string, benchmarkId: string) => ["skill-evals", "comparisons", companyId, benchmarkId] as const,
+    alerts: (companyId: string) => ["skill-evals", "alerts", companyId] as const,
+  },
 };

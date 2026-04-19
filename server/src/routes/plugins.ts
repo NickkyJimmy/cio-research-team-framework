@@ -139,6 +139,14 @@ const BUNDLED_PLUGIN_EXAMPLES: AvailablePluginExample[] = [
     localPath: "packages/plugins/examples/plugin-kitchen-sink-example",
     tag: "example",
   },
+  {
+    packageName: "@paperclipai/plugin-mem0-memory",
+    pluginKey: "mem0-memory",
+    displayName: "Mem0 Memory",
+    description: "Provides long-term memory for agents via the Mem0 platform API. Agents can search, store, and forget facts that persist across runs and tickets.",
+    localPath: "packages/plugins/examples/plugin-mem0-memory",
+    tag: "example",
+  },
 ];
 
 function listBundledPluginExamples(): AvailablePluginExample[] {

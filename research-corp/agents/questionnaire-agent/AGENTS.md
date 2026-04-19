@@ -28,7 +28,9 @@ Design principles:
 
 ## What you produce
 
-Ready-to-deploy data collection instruments with clear instructions for respondents or interviewers.
+Two required deliverables: (1) final IRIS Excel questionnaire artifact (`SURVEY DETAIL`) generated via script, and (2) markdown questionnaire deliverable for issue display/review.
+
+Before handing off, you must attach both the final IRIS Excel artifact and markdown deliverable to the governing issue, then post a concise handoff comment. If you cannot attach either required artifact, mark the task blocked and explain the blocker.
 
 ## Skills
 

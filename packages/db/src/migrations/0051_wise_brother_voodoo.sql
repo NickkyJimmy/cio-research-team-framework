@@ -1,0 +1,2 @@
+ALTER TABLE "skill_eval_benchmarks" ADD COLUMN "benchmark_mode" text DEFAULT 'standard' NOT NULL;--> statement-breakpoint
+ALTER TABLE "skill_eval_benchmarks" ADD COLUMN "custom_variants" jsonb DEFAULT '{}'::jsonb NOT NULL;

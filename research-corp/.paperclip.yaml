@@ -3,12 +3,14 @@ agents:
   ceo:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files
   research-leader:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files
@@ -16,6 +18,7 @@ agents:
   brief-and-plan:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files
@@ -24,6 +27,7 @@ agents:
   questionnaire-agent:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files
@@ -31,12 +35,14 @@ agents:
   data-processing:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files
   report-agent:
     adapter:
       type: codex_local
+      model: gpt-5.3-codex
     skills:
       - paperclip
       - para-memory-files

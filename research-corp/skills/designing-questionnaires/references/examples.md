@@ -58,7 +58,7 @@ Shows how content framework elements map to specific questionnaire items.
 
 ---
 
-## Example: Good Survey Question ✅
+## Example: Good Survey Question
 
 > **Q7.** Bạn biết đến tính năng "Nhận tiền từ Ngân hàng qua SĐT MoMo" từ đâu?
 [ĐA CHỌN, NGẪU NHIÊN HÓA phương án 1-8]
@@ -75,26 +75,16 @@ Shows how content framework elements map to specific questionnaire items.
 10. Không nhớ / Không biết
 > 
 
-<aside>
-✅
-
 **Why this question is good:** Multi-select allows multiple touchpoints. Options are comprehensive (in-app + out-app + WOM). Randomized to prevent order bias. Includes "Khác" and "Không nhớ" as non-randomized anchors. Maps directly to SOA content block.
-
-</aside>
 
 ---
 
-## Example: Bad Survey Question ❌
+## Example: Bad Survey Question
 
-> ❌ *"Bạn có thấy tính năng nhận tiền qua SĐT MoMo rất tiện lợi và dễ sử dụng không?"*
+> *"Bạn có thấy tính năng nhận tiền qua SĐT MoMo rất tiện lợi và dễ sử dụng không?"*
 > 
 
-<aside>
-⚠️
-
 **Problems:** Leading (assumes "rất tiện lợi"), double-barreled ("tiện lợi" AND "dễ sử dụng"), Yes/No format loses nuance.
-
-</aside>
 
 **How to fix:** Split into two separate Likert-scale questions — one for convenience, one for ease of use. Remove evaluative language.
 
@@ -119,9 +109,4 @@ Thời lượng: 15–20 phút | Mục tiêu: Content Block B — Product Funnel
 > **Follow-up:** "Nếu bạn có thể thay đổi một điều trong quá trình nhận tiền, bạn sẽ thay đổi gì?"
 > 
 
-<aside>
-📌
-
 **Moderator note:** Let the participant tell the story naturally before probing. Observe both verbal and non-verbal reactions. If participant says "bình thường" (normal/fine), probe deeper — this often masks unexpressed frustration or indifference.
-
-</aside>

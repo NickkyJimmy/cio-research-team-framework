@@ -10,6 +10,7 @@ import {
 import { validate } from "../middleware/validate.js";
 import { assertBoard, assertCompanyAccess } from "./authz.js";
 import { logActivity, secretService } from "../services/index.js";
+import { testMem0Connection } from "../services/mem0-memory.js";
 
 export function secretRoutes(db: Db) {
   const router = Router();
@@ -159,6 +160,20 @@ export function secretRoutes(db: Db) {
     });
 
     res.json({ ok: true });
+  });
+
+  /**
+   * GET /api/companies/:companyId/mem0/test
+   *
+   * Test the Mem0 memory connection for this company.
+   * Verifies API key exists and Mem0 API is reachable.
+   */
+  router.get("/companies/:companyId/mem0/test", async (req, res) => {
+    assertBoard(req);
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    const result = await testMem0Connection(db, companyId);
+    res.json(result);
   });
 
   return router;

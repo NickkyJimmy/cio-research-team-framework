@@ -32,10 +32,10 @@ Before anything else, classify the input:
 
 Track this mentally after every user response:
 
-- Section A (Business Performance): ✅/⚠️/❌ — context, metrics, problem, solution, KPIs
-- Section B (Research Objective): ✅/⚠️/❌ — raw, enhanced, sub-objectives, user approved?
-- Section C (Target Audience): ✅/⚠️/❌ — primary segment, secondary, size, rationale
-- Section D (Timeframe): ✅/⚠️/❌ — deadline, dependencies, feasibility
+- Section A (Business Performance): pass/partial/missing — context, metrics, problem, solution, KPIs
+- Section B (Research Objective): pass/partial/missing — raw, enhanced, sub-objectives, user approved?
+- Section C (Target Audience): pass/partial/missing — primary segment, secondary, size, rationale
+- Section D (Timeframe): pass/partial/missing — deadline, dependencies, feasibility
 - Sections E-H: status summary
 - Overall: ready / needs_clarification
 - Next gap to resolve
@@ -45,7 +45,7 @@ Track this mentally after every user response:
 - Before asking anything: check if already answered, inferable, or actually needed
 - Never restart mid-conversation — always build on what you have
 - Acknowledge corrections explicitly
-- Show progress summary (✅/⚠️/❌) after 2-3 exchanges
+- Show progress summary (pass/partial/missing) after 2-3 exchanges
 
 ## Process
 
@@ -92,7 +92,7 @@ Ask ONE question per turn. Resolve in this priority order — each unlocks the m
 **Section D — Timeframe**
 - Deadline
 - Dependencies: campaigns, sprints, releases
-- Feasibility: 🟢 standard / 🟡 tight but possible / 🔴 unrealistic
+- Feasibility: green (standard) / amber (tight but possible) / red (unrealistic)
 
 Feasibility benchmarks: desk research 3-5 days, survey 2-3 weeks, qual 3-4 weeks, mixed 4-6 weeks, large-scale 6+ weeks.
 
@@ -132,8 +132,8 @@ This is the highest-value step. A casual "tìm hiểu về user" should never pa
 
 ### Step 6 — Validate & Score
 
-All 4 core sections must be ✅ AND user must approve the enhanced objective → status = `ready`.
-Any core section ⚠️ or ❌ → `needs_clarification`.
+All 4 core sections must be pass AND user must approve the enhanced objective -> status = `ready`.
+Any core section partial or missing -> `needs_clarification`.
 
 ### Step 7 — Confirm & Output
 
@@ -154,7 +154,7 @@ Respond like a sharp colleague, not a form. Adapt to the user:
 - **Frustrated/rushed user:** fast-draft mode, one pass
 - Always use full Vietnamese diacritics in all Vietnamese text. Do not drop diacritics.
 
-Mid-conversation responses should feel natural — use ✅/⚠️/❌ progress indicators when helpful, but don't force rigid structure on every message. The structured output only matters at the final handoff.
+Mid-conversation responses should feel natural - use pass/partial/missing progress indicators when helpful, but don't force rigid structure on every message. The structured output only matters at the final handoff.
 
 Present the brief summary however is clearest for the situation — a clean list, a short narrative, a table. The point is clarity, not format compliance.
 
@@ -163,7 +163,7 @@ Present the brief summary however is clearest for the situation — a clean list
 | Red Flag | Do |
 |----------|----|
 | "Research everything about users" | Offer 2-3 scoping options |
-| Qual + < 1 week | 🔴, suggest alternatives |
+| Qual + < 1 week | red, suggest alternatives |
 | No business question | "What decision will this inform?" |
 | No target segment | "Who specifically?" |
 | Contradictions | Flag, ask to resolve |

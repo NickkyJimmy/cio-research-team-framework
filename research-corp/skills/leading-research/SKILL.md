@@ -19,6 +19,52 @@ Respond to these four triggers:
 
 ---
 
+## Phase 0: Intake Routing (Project Detection)
+
+Before normal pipeline review, determine whether the brief/request belongs to an existing project or starts a new project.
+
+### Detection logic
+
+Classify as **existing project** when any of these are present:
+
+- Explicit project identifier or project URL key
+- Clear reference to an active project already tracked in Paperclip
+- User says this is wave 2+, continuation, update, or follow-up of a known project
+
+Classify as **new project** when:
+
+- No valid existing project can be identified after checking context
+- User explicitly says this is a new initiative/new study/new stream
+- Request scope or objective is materially different from existing projects
+
+If ambiguous, ask one focused clarification question. Do not proceed with assumptions when project identity changes issue placement.
+
+### Required action by classification
+
+1. **Existing project**
+   - Create or continue issues inside that existing project.
+   - Keep stage issues linked to the same project context for traceability.
+
+2. **New project**
+   - Create the project first via Paperclip API.
+   - Then create the governing intake/brief issue within that new project (do not create it as a floating issue).
+   - Ensure downstream stage issues inherit and stay under the same new project.
+
+### Paperclip API execution rule
+
+Use the Paperclip skill/API flow for all project and issue creation:
+
+- Create project: `POST /api/companies/{companyId}/projects`
+- Create issue in project: `POST /api/companies/{companyId}/issues` with `projectId`
+
+Log in your review comment:
+
+- Project classification: `existing_project` or `new_project`
+- Project reference (id/url key)
+- Governing issue identifier
+
+---
+
 ## Phase 1: Scan the Pipeline
 
 Start every review cycle by loading the **Agent Task Tracker** and categorizing tasks by status:
@@ -63,10 +109,124 @@ After evaluating, assign one of three outcomes:
 
 If you need a human decision, prefer requesting a Paperclip approval (linked to the governing issue) instead of relying on ad-hoc comments. This creates an explicit approve/reject/revision outcome and reliably wakes the requesting agent.
 
+### Mandatory Inbox Notification at Every Gate
+
+After each gate review (Brief, Plan, Questionnaire, Data Processing, Report), you must send a human decision request through the Paperclip inbox/approval flow.
+
+Required decision options in every gate request:
+
+- `approve_and_continue`
+- `request_revision`
+- `decline_to_continue`
+
+Execution rule:
+
+1. Post the Stage Evaluation comment on the governing issue.
+2. Create/update a linked approval request so board users receive an inbox item.
+3. Wait for decision before advancing to the next stage.
+
+If the stage is not normally gated but human verification is needed (risk, ambiguity, policy, data integrity concern), still create a human inbox approval request and pause progression until resolved.
+
+Minimum payload fields for each approval:
+
+- `gate`: stage name
+- `decisionNeeded`: short statement of what decision unlocks
+- `recommendedOutcome`: one of `approve_and_continue`, `request_revision`, `decline_to_continue`
+- `riskNotes`: optional, required when escalation reason exists
+
 **Example feedback (Revision Needed):**
 
-> The methodology section is missing sample size justification (Completeness ❌). The rest looks solid — data sources are well-cited and the analysis plan is clear. Add a brief rationale for n=200 and this is ready to approve.
+> The methodology section is missing sample size justification (Completeness failed). The rest looks solid - data sources are well-cited and the analysis plan is clear. Add a brief rationale for n=200 and this is ready to approve.
 > 
+
+### Stage-by-Stage Evaluation Protocol (Required)
+
+For every stage deliverable, run a formal evaluation before approving handoff. This ensures each stage is both locally correct and ready for downstream use.
+
+Use this scoring model:
+
+- Score each required criterion on **0-2**:
+  - 0 = fails / missing
+  - 1 = partial / unclear
+  - 2 = passes
+- Compute:
+  - `stage_score = earned_points / max_points`
+- Decision rule:
+  - `approved`: stage_score >= 0.80 and no critical criterion scored 0
+  - `revision_needed`: 0.60-0.79 or any one critical criterion scored 0
+  - `rejected`: < 0.60 or two or more critical criteria scored 0
+
+#### Stage criteria
+
+1. **Intake Brief stage**
+   - Required checks:
+     - Decision statement is explicit
+     - Objective is specific and measurable
+     - Target audience is behaviorally defined
+     - Constraints (timeline/budget/scope) are stated
+   - Critical criteria:
+     - Decision statement
+     - Objective clarity
+
+2. **Research Plan stage**
+   - Required checks:
+     - Method matches objective and decision type
+     - Sample design is feasible
+     - Question/metric mapping is explicit
+     - Timeline and dependencies are realistic
+     - Risks and mitigations are documented
+   - Critical criteria:
+     - Method fit
+     - Sample feasibility
+
+3. **Questionnaire / Instrument stage**
+   - Required checks:
+     - Questions map to objectives
+     - Wording is unbiased and clear
+     - Flow/skip logic is coherent
+     - Answer options are exhaustive where needed
+   - Critical criteria:
+     - Objective mapping
+     - Bias check
+
+4. **Data Processing / Analysis stage**
+   - Required checks:
+     - Data quality checks are documented
+     - Transformations/coding decisions are traceable
+     - Analysis answers core questions
+     - Limitations are acknowledged
+   - Critical criteria:
+     - Data quality validation
+     - Traceability of transformations
+
+5. **Report stage**
+   - Required checks:
+     - Findings are supported by evidence
+     - Storyline is coherent and decision-focused
+     - Recommendations are actionable and prioritized
+     - Confidence/limitations are transparent
+   - Critical criteria:
+     - Evidence-to-claim alignment
+     - Recommendation actionability
+
+#### Required evaluation log format
+
+For each reviewed deliverable, include this in your review comment:
+
+```md
+## Stage Evaluation
+- Stage: <intake_brief|research_plan|questionnaire|data_processing|report>
+- Score: <earned>/<max> (<percent>)
+- Verdict: approved | revision_needed | rejected
+
+### Criteria
+- [criterion]: 0|1|2 - evidence
+
+### Must-fix items before next stage
+1. ...
+```
+
+If verdict is `revision_needed` or `rejected`, assign back with explicit must-fix items tied to failed criteria.
 
 ---
 
@@ -118,6 +278,10 @@ These constraints exist because the Agent Leader is a quality gate — if the ga
 - **Escalate after 2 consecutive rejections.** If an agent fails the same task twice, the problem is almost certainly a misunderstanding of the objective, not just execution quality. Humans are better at resolving ambiguity.
 - **Log every review decision with a timestamp and reasoning.** This creates an audit trail that helps calibrate future reviews and lets humans verify your judgment. A decision without reasoning is uncheckable.
 - **Never approve a deliverable that fails 2 or more quality criteria.** One marginal criterion can be addressed in the next stage; two failures compound unpredictably.
+- **Never hand off to the next stage without a written Stage Evaluation block.** If it is not logged, it is not reviewed.
+- **Never create intake briefs outside a project.** If the request is a new initiative, create the new project first, then create the issue within that project.
+- **Never advance a stage without a human inbox decision.** Every gate must create a board-visible approval item with approve/revise/decline options.
+- **For off-stage human checks, use inbox approval as well.** Do not rely on informal comments for critical verification.
 
 ---
 

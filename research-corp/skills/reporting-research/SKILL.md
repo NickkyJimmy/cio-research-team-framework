@@ -11,6 +11,13 @@ description: Transform clean survey data and research context into polished, ins
 
 ---
 
+## Default output language
+
+- Write the full report in Vietnamese by default.
+- Keep method names and technical terms in English when needed (e.g., IDI, FGD, CASI, CATI, NPS, CSAT, cross-tab, regression).
+- Always use full Vietnamese diacritics in all Vietnamese text, including headings and section titles. Do not drop diacritics.
+- Only switch to English or bilingual output if the user explicitly requests it.
+
 ## What You Need Before Starting
 
 Every report requires three inputs. If any are missing or ambiguous, ask for clarification — never fabricate data to fill gaps.
@@ -223,14 +230,55 @@ Before delivering, verify every item:
 - [ ]  Report language matches stakeholder expectation
 - [ ]  Segment comparisons use consistent definitions
 
+### Step 6: Mandatory Issue Delivery
+
+After the report passes self-review, deliver it to the governing issue before marking ready.
+
+Required actions:
+
+1. Generate final report markdown file (`.md`) as the canonical deliverable.
+2. Attach/upload the report markdown file to the governing issue.
+3. Post the full report content directly in the governing issue (issue comment/body), not only a short summary.
+4. Add a short metadata block in the same issue update with:
+   - report filename/path
+   - language used (Vietnamese by default)
+   - coverage of objectives
+   - key caveats/limitations
+5. Only after (1), (2), (3), and (4), mark `ready_for_review`.
+
+If issue attachment/commenting is blocked by permissions or tooling, mark the task as blocked and state exactly what is missing.
+
 ---
 
 ## Language & Tone
 
 - Professional but accessible — cut jargon unless the audience expects it
 - Use active voice: *"Users prefer X"* not *"X was preferred by users"*
-- **Default language**: Vietnamese for MoMo internal reports, English for cross-functional or international stakeholders. Match the language of the research plan provided.
+- Follow the **Default output language** rules above for language selection and diacritics.
 - Use **bold** for key metrics and headline numbers throughout
+
+## Output Language Requirement (Mandatory)
+
+Use Vietnamese for the full report output, including:
+
+- section headings
+- table headers
+- chart titles
+- bullet points
+- recommendations
+- caveats/limitations
+
+Only switch to English or bilingual format if the user explicitly asks for it.
+
+## Output Delivery Format (Mandatory)
+
+Final output must include:
+
+1. A complete report markdown file (`.md`).
+2. The full markdown report displayed on the governing issue as readable content (not only as attached artifact).
+3. A concise metadata note on the issue for traceability.
+
+Do not treat chat-only response as final delivery when an issue-based handoff is required.
 
 ---
 

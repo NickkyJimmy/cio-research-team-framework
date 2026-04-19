@@ -293,6 +293,15 @@ export function stringifyPaperclipWakePayload(value: unknown): string | null {
   return JSON.stringify(normalized);
 }
 
+/**
+ * Extract the pre-rendered Mem0 memory block from the heartbeat context.
+ * Returns an empty string if no memory context is present.
+ */
+export function renderPaperclipMemoryPrompt(value: unknown): string {
+  if (typeof value !== "string" || value.trim().length === 0) return "";
+  return value.trim();
+}
+
 export function renderPaperclipWakePrompt(
   value: unknown,
   options: { resumedSession?: boolean } = {},

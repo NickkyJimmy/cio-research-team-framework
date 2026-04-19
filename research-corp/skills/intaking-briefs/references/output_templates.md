@@ -4,7 +4,7 @@ These templates are for the FINAL handoff to `planning-research`. Mid-conversati
 
 ## Structured Brief (status = ready)
 
-Use this when all 4 core sections are ✅ and user has confirmed.
+Use this when all 4 core sections are pass and user has confirmed.
 
 The format matters because `planning-research` parses it. But within each field, write naturally — don't pad or over-formalize.
 
@@ -39,7 +39,7 @@ The format matters because `planning-research` parses it. But within each field,
   <timeframe>
     <deadline>Date</deadline>
     <dependencies>What depends on this</dependencies>
-    <feasibility>🟢/🟡/🔴 + brief justification</feasibility>
+    <feasibility>green/amber/red + brief justification</feasibility>
   </timeframe>
 
   <classification>
@@ -64,7 +64,7 @@ The format matters because `planning-research` parses it. But within each field,
 
 You don't need to output rigid XML for clarifications. Just make sure your response includes:
 
-1. **Progress snapshot** — where each section stands (✅/⚠️/❌)
+1. **Progress snapshot** — where each section stands (pass/partial/missing)
 2. **What's missing** — the specific gap and why it matters
 3. **One question** — the highest-priority question that unlocks the most progress
 
@@ -73,10 +73,10 @@ How you present this is up to you — a short paragraph, a bullet list, whatever
 ### Example (natural style):
 
 > Here's where we are:
-> - Business context ✅
-> - Objective ⚠️ — I have the topic but need to sharpen it
-> - Audience ❌
-> - Timeline ❌
+> - Business context pass
+> - Objective partial — I have the topic but need to sharpen it
+> - Audience missing
+> - Timeline missing
 >
 > Next up: Bạn muốn ra quyết định gì sau khi có kết quả nghiên cứu này? This will help me write a focused objective.
 

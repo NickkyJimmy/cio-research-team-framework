@@ -7,10 +7,10 @@
 **Enhanced:** "Xác định top 3 rào cản khiến A30 MoMo users chưa adopt tính năng Nhận tiền từ Ngân hàng qua SĐT, đo lường mức độ nhận biết và ý định sử dụng, nhằm đề xuất cải thiện conversion rate trong product funnel và đạt target 800k adopters T1/2026."
 
 **4-element check:**
-- ✅ Measurable: "top 3 rào cản", "đo lường mức độ" [inferred]
-- ✅ Segment: "A30 MoMo users" [inferred]
-- ✅ Scope: "product funnel" [inferred]
-- ✅ Decision: "đề xuất cải thiện CR", "đạt target 800k" [inferred]
+- pass Measurable: "top 3 rào cản", "đo lường mức độ" [inferred]
+- pass Segment: "A30 MoMo users" [inferred]
+- pass Scope: "product funnel" [inferred]
+- pass Decision: "đề xuất cải thiện CR", "đạt target 800k" [inferred]
 
 → 3 of 4 inferred. Must confirm with user before proceeding.
 
@@ -32,14 +32,14 @@ Why it works:
 
 **User:** "Nghiên cứu về user"
 
-4-element check: all ❌ — nothing to work with.
+4-element check: all missing — nothing to work with.
 
 **Good response:**
 > Mình chưa đủ thông tin để scope brief. Hiện tại:
-> - Business context ❌
-> - Objective ⚠️ (có topic "user" nhưng chưa cụ thể)
-> - Audience ❌
-> - Timeline ❌
+> - Business context missing
+> - Objective partial (có topic "user" nhưng chưa cụ thể)
+> - Audience missing
+> - Timeline missing
 >
 > Bạn muốn ra quyết định gì sau khi có kết quả nghiên cứu này?
 
@@ -51,7 +51,7 @@ One question. Segment question comes next turn.
 User uploads 3-page Titan campaign brief.
 
 1. Extract all fields silently (don't re-ask what's in the doc)
-2. Present: "Tôi đã extract: Business Performance ✅, Research Objective ⚠️ (cần enhance), Target Audience ✅, Timeframe ❌ (chưa có deadline)"
+2. Present: "Tôi đã extract: Business Performance pass, Research Objective partial (cần enhance), Target Audience pass, Timeframe missing (chưa có deadline)"
 3. Ask only: "Deadline cho nghiên cứu này là khi nào?"
 4. After getting deadline → enhance objective → confirm
 
@@ -100,9 +100,9 @@ User uploads 3-page Titan campaign brief.
 | 5+ page document | Extract → section summary → gaps only |
 | Contradictions | Flag explicitly, ask to resolve |
 | User rejects enhancement | Accept theirs, note yours as `enhanced_recommended`, flag risk |
-| Dependencies unknown | Default 🟡, ask one question |
+| Dependencies unknown | Default amber, ask one question |
 | Scope too broad | Force narrowing with 2-3 options |
-| Qual + < 1 week | 🔴 immediately, suggest alternatives |
+| Qual + < 1 week | red immediately, suggest alternatives |
 | Mixed Vietnamese/English | Default Vietnamese for internal, keep technical terms in English |
 | Product name only | Ask what question needs answering |
 | Returning user | Resume, don't restart |

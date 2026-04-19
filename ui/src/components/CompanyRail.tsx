@@ -269,9 +269,10 @@ export function CompanyRail() {
 
   return (
     <div className="flex flex-col items-center w-[72px] shrink-0 h-full bg-background border-r border-border">
-      {/* Paperclip icon - aligned with top sections (implied line, no visible border) */}
+      {/* Company logo - aligned with top sections (implied line, no visible border) */}
       <div className="flex items-center justify-center h-12 w-full shrink-0">
-        <Paperclip className="h-5 w-5 text-foreground" />
+        <img src="/logo-cio-light.png" alt="CIO" className="w-6 h-6 dark:hidden object-contain" />
+        <img src="/logo-cio-dark.png" alt="CIO" className="w-6 h-6 hidden dark:block object-contain" />
       </div>
 
       {/* Company list */}

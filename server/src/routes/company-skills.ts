@@ -125,6 +125,43 @@ export function companySkillRoutes(db: Db) {
     res.json(result);
   });
 
+  router.get("/companies/:companyId/skills/:skillId/bundle", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    const skillId = req.params.skillId as string;
+    assertCompanyAccess(req, companyId);
+
+    const skill = await svc.detail(companyId, skillId);
+    if (!skill) {
+      res.status(404).json({ error: "Skill not found" });
+      return;
+    }
+
+    const scripts: Array<{ path: string; content: string }> = [];
+    const references: Array<{ path: string; content: string }> = [];
+    const assets: Array<{ path: string; contentHash: string; url?: string }> = [];
+
+    for (const file of skill.fileInventory) {
+      const detail = await svc.readFile(companyId, skillId, file.path);
+      if (!detail) continue;
+      if (detail.path.startsWith("scripts/")) {
+        scripts.push({ path: detail.path, content: detail.content });
+      } else if (detail.path.startsWith("references/")) {
+        references.push({ path: detail.path, content: detail.content });
+      } else if (detail.path.startsWith("assets/")) {
+        assets.push({ path: detail.path, contentHash: String(detail.content.length), url: undefined });
+      }
+    }
+
+    res.json({
+      name: skill.name,
+      description: skill.description ?? "",
+      skillMd: skill.markdown,
+      scripts,
+      references,
+      assets,
+    });
+  });
+
   router.post(
     "/companies/:companyId/skills",
     validate(companySkillCreateSchema),
